@@ -1,0 +1,43 @@
+import { Injectable } from "@nestjs/common";
+
+import { {{ classify name 'Repository' }} } from '../repositories/{{ name }}.repository'
+import { {{ classify name 'Entity' }} } from '../../../domain/entities/{{ name }}.entity';
+import { {{ pascalCase name }} } from '../../../domain/interfaces/{{ name }}.interface';
+
+@Injectable()
+export class {{ classify name 'Service' }} {
+  constructor(
+    private readonly {{ camelCase name 'Repository' }}: {{ classify name 'Repository' }}
+  ) {}
+
+  public async create(
+    payload: {{ pascalCase name }}
+  ): Promise<{{ classify name 'Entity' }}> {
+    return this.{{ camelCase name 'Repository' }}.create(payload);
+  }
+
+  public async find(
+    filter: Partial<{{ pascalCase name }}>
+  ): Promise<{{ classify name 'Entity' }}[]> {
+    return this. {{ camelCase name 'Repository' }}.find(filter);
+  }
+
+  public findOne(
+    filter: Partial<{{ pascalCase name }}>,
+  ): Promise<{{ classify name 'Entity' }} | undefined> {
+    return this. {{ camelCase name 'Repository' }}.findOne(filter);
+  }
+
+  public update(
+    filter: Partial<{{ pascalCase name }}>,
+    data: Partial<{{ classify name 'Entity' }}>
+  ): Promise<{{ classify name 'Entity' }} | undefined> {
+    return this.{{ camelCase name 'Repository' }}.update(filter, data);
+  }
+
+  public delete(
+   filter: Partial<{{ pascalCase name }}>,
+  ): Promise<void> {
+    return this.{{ camelCase name 'Repository' }}.delete(filter);
+  }  
+}

@@ -1,0 +1,19 @@
+import { {{ pascalCase name }} } from '../interfaces/{{ name }}.interface'
+
+export class {{ classify name 'Entity' }} {
+  public uuid : string;
+  
+  private constructor(payload: {{ pascalCase name }}) {
+    this.uuid = payload.uuid;
+  }
+  
+  public static create(payload: {{ pascalCase name }}): {{ classify name 'Entity' }} {
+    return new {{ classify  name 'Entity' }}(payload)
+  }
+
+  public toJson(): {{ pascalCase name }} {
+    return {
+        uuid: this.uuid
+    }
+  }
+}

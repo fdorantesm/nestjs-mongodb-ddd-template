@@ -1,0 +1,16 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
+
+@Schema({
+  collection: '{{ camelize (pluralize name) }}',
+  timestamps: true,
+  autoindex: true
+})
+export class {{ classify name 'Model' }} extends Document {
+  @Prop({ type: String, required: true, unique: true })
+  public uuid: string;
+}
+
+const {{ classify name 'Schema' }} = SchemaFactory.createForClass({{ classify name 'Schema' }});
+
+export { {{ classify name 'Schema' }} };

@@ -1,0 +1,26 @@
+{
+  "name": "nestjs-mongodb-ddd-template",
+  "main": "dist/index.js",
+  "bin": "nestjs-ddd",
+  "dependencies": {
+    "@nestjs/common": "^9.3.10",
+    "@nestjs/core": "^9.3.10",
+    "@nestjs/mapped-types": "^1.2.2",
+    "@nestjs/swagger": "^6.2.1",
+    "@types/mustache": "^4.2.2",
+    "commander": "^10.0.0",
+    "handlebars": "^4.7.7",
+    "inflection": "^2.0.1",
+    "liquidjs": "^10.6.1",
+    "mustache": "^4.2.0",
+    "pug": "^3.0.2"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.191",
+    "@types/node": "^18.15.3",
+    "typescript": "^5.0.2"
+  },
+  "scripts": {
+    "build": "tsc"
+  }
+}

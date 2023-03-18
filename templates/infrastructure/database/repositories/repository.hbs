@@ -1,0 +1,51 @@
+import { InjectModel } from '@nestjs/mongoose';
+import { Injectable } from "@nestjs/common";
+import { Model } from 'mongoose';
+
+import { {{ classify name 'Entity' }} } from '../../../domain/entities/{{ name }}.entity';
+import { {{ classify name 'Model' }} } from '../models/{{ name }}.model';
+import { {{ pascalCase name }} } from '../../../domain/interfaces/{{ name }}.interface';
+
+@Injectable()
+export class {{ classify name 'Repository' }} {
+  constructor(
+    @InjectModel({{classify name 'Model.name' }})
+    private readonly {{ camelCase name 'Model' }}: Model<{{ classify name 'Model' }}>
+  ) {}
+
+  public async create(payload: {{ pascalCase name }}): Promise<{{ classify name 'Entity' }}> {
+    const row = await this.{{ camelCase name 'Model' }}.create(payload);
+    return {{ classify name 'Entity' }}.create(row.toJSON())
+  }
+
+  public async find(
+    filter: Partial<{{ pascalCase name }}>
+  ): Promise<{{ classify name 'Entity' }}[]> {
+    const rows = await this.{{camelCase name 'Model' }}.find(filter).exec();
+      return rows.map((row) => {{ classify name 'Entity' }}.create(row.toJSON()))
+  }
+
+  public async findOne(
+    filter: Partial<{{ pascalCase name }}>
+  ): Promise<{{ classify name 'Entity' }} | undefined> {
+    const row = await this.{{camelCase name 'Model' }}.findOne(filter).exec();
+    if (row) {
+      return {{ classify name 'Entity' }}.create(row.toJSON())
+    }
+  }
+
+  public async update(
+    filter: Partial<{{ pascalCase name }}>, 
+    data: Partial<{{ classify name 'Entity' }}>
+  ): Promise<{{ classify name 'Entity' }} | undefined> {
+    await this.{{camelCase name 'Model' }}.updateOne(filter, data);
+    return this.findOne({ ...filter, ...data })
+    
+  }
+
+  public async delete(
+    filter: Partial<{{ pascalCase name }}>, 
+  ): Promise<void> {
+    await this.{{camelCase name 'Model' }}.deleteOne(filter);
+  }
+}
