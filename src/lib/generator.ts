@@ -1,63 +1,52 @@
 import * as fs from "fs";
 import * as path from "path";
+import glob from "glob";
 
 import { Handlebars } from "./handlebars";
+import { getOutputPath } from "../utils/output-path";
+
+const templateDir = path.join(process.cwd(), "templates");
 
 async function generateModule(name: string) {
-  const templateDir = path.join(process.cwd(), "templates");
   const moduleDir = path.join(process.cwd(), name);
-
-  fs.mkdirSync(moduleDir);
-  fs.mkdirSync(path.join(moduleDir, "domain"));
-  fs.mkdirSync(path.join(moduleDir, "domain/entities"));
-  fs.mkdirSync(path.join(moduleDir, "domain/interfaces"));
-  fs.mkdirSync(path.join(moduleDir, "infrastructure"));
-  fs.mkdirSync(path.join(moduleDir, "infrastructure/database"));
-  fs.mkdirSync(path.join(moduleDir, "infrastructure/database/models"));
-  fs.mkdirSync(path.join(moduleDir, "infrastructure/database/repositories"));
-  fs.mkdirSync(path.join(moduleDir, "infrastructure/database/services"));
-  fs.mkdirSync(path.join(moduleDir, "infrastructure/http"));
-  fs.mkdirSync(path.join(moduleDir, "infrastructure/http/controllers"));
-  fs.mkdirSync(path.join(moduleDir, "infrastructure/http/dtos"));
-
-  const files = [
-    {
-      from: "domain/entities/entity.hbs",
-      to: `domain/entities/${name}.entity.ts`,
-    },
-    {
-      from: "domain/interfaces/interface.hbs",
-      to: `domain/interfaces/${name}.interface.ts`,
-    },
-    {
-      from: "infrastructure/http/controllers/controller.hbs",
-      to: `infrastructure/http/controllers/${name}.controller.ts`,
-    },
-    {
-      from: "infrastructure/database/models/model.hbs",
-      to: `infrastructure/database/models/${name}.model.ts`,
-    },
-    {
-      from: "infrastructure/database/repositories/repository.hbs",
-      to: `infrastructure/database/repositories/${name}.repository.ts`,
-    },
-    {
-      from: "infrastructure/database/services/service.hbs",
-      to: `infrastructure/database/services/${name}.service.ts`,
-    },
-    { from: "module.hbs", to: `${name}.module.ts` },
+  const directories = [
+    "domain",
+    "domain/entities",
+    "domain/interfaces",
+    "infrastructure",
+    "infrastructure/database",
+    "infrastructure/database/models",
+    "infrastructure/database/repositories",
+    "infrastructure/database/services",
+    "infrastructure/http",
+    "infrastructure/http/controllers",
+    "infrastructure/http/dtos",
   ];
 
-  for (const file of files) {
-    const template = fs.readFileSync(
-      path.join(templateDir, file.from),
-      "utf-8"
-    );
+  directories.forEach((dir) => {
+    const dirPath = path.join(moduleDir, dir);
+    if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath, { recursive: true });
+    }
+  });
 
+  const globOptions = {
+    cwd: templateDir,
+    nodir: true,
+  };
+
+  const files = await glob("**/*.hbs", globOptions);
+
+  files.forEach((file) => {
+    const filenamedParsed = path.parse(file);
+    const filename = `${name}.${filenamedParsed.name}.ts`;
+    const fileRoute = path.join(name, filenamedParsed.dir, filename);
+    const template = fs.readFileSync(`templates/${file}`, "utf-8");
     const compiledTemplate = Handlebars.compile(template);
     const output = compiledTemplate({ name });
-    fs.writeFileSync(path.join(moduleDir, file.to), output);
-  }
+    fs.mkdirSync(path.dirname(fileRoute), { recursive: true });
+    fs.writeFileSync(fileRoute, output);
+  });
 }
 
 export { generateModule };

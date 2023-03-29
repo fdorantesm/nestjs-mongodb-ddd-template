@@ -1,7 +1,8 @@
 {
   "name": "nestjs-mongodb-ddd-template",
   "main": "dist/index.js",
-  "bin": "nestjs-ddd",
+  "bin": "3dgen",
+  "version": "0.0.1",
   "dependencies": {
     "@nestjs/common": "^9.3.10",
     "@nestjs/core": "^9.3.10",
@@ -9,6 +10,7 @@
     "@nestjs/swagger": "^6.2.1",
     "@types/mustache": "^4.2.2",
     "commander": "^10.0.0",
+    "glob": "^9.3.0",
     "handlebars": "^4.7.7",
     "inflection": "^2.0.1",
     "liquidjs": "^10.6.1",
