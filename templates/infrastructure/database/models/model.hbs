@@ -11,6 +11,6 @@ export class {{ classify name 'Model' }} extends Document {
   public uuid: string;
 }
 
-const {{ classify name 'Schema' }} = SchemaFactory.createForClass({{ classify name 'Schema' }});
+const {{ classify name 'Schema' }} = SchemaFactory.createForClass({{ classify name 'Model' }});
 
 export { {{ classify name 'Schema' }} };
